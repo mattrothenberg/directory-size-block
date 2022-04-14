@@ -23,34 +23,25 @@
   },
   "blocks": [
     {
-      "type": "file",
-      "id": "file-block",
-      "title": "Example File Block",
-      "description": "A basic file block",
-      "entry": "/src/blocks/example-file-block/index.tsx",
-      "extensions": [
-        "*"
-      ],
-      "example_path": "https://github.com/facebook/react/blob/main/packages/react-dom/index.js"
-    },
-    {
       "type": "folder",
-      "id": "folder-block",
-      "title": "Example Folder Block",
-      "description": "A basic folder block",
+      "id": "directory-size-block",
+      "title": "Directory Size Block",
+      "description": "Visualizes the size of files in a directory over time",
       "entry": "/src/blocks/example-folder-block/index.tsx",
       "extensions": [
         "*"
       ],
-      "example_path": "https://github.com/githubocto/flat"
+      "example_path": "https://github.com/Wattenberger/flat-weather/tree/gh-pages/_next/static/chunks"
     }
   ],
   "dependencies": {
     "@codesandbox/sandpack-react": "^0.13.13",
+    "@floating-ui/react-dom": "^0.6.2",
     "@githubnext/utils": "^0.19.7",
     "@loadable/component": "^5.15.0",
     "@octokit/rest": "^18.12.0",
     "@types/lodash.uniqueid": "^4.0.6",
+    "framer-motion": "^6.3.0",
     "git-url-parse": "^11.6.0",
     "lodash.uniqueid": "^4.0.1",
     "parse-static-imports": "^1.1.0",
