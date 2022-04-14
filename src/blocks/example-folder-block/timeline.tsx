@@ -1,6 +1,5 @@
-import { arrow } from "@floating-ui/core";
 import { offset, shift, useFloating } from "@floating-ui/react-dom";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { CommitWithData } from ".";
 import { useInterval } from "./hooks";
 
@@ -14,7 +13,6 @@ export const Timeline = ({
   commits: CommitWithData[];
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const arrowRef = useRef(null);
 
   const commitIndex = commits.findIndex((d) => d.sha === commit);
   useInterval(
@@ -27,16 +25,10 @@ export const Timeline = ({
     isPlaying ? 500 : null
   );
 
-  const {
-    x,
-    y,
-    reference,
-    floating,
-    strategy,
-    middlewareData: { arrow: { x: arrowX, y: arrowY } = {} },
-  } = useFloating({
+  const { x, y, reference, floating, strategy } = useFloating({
     placement: "bottom",
-    middleware: [shift(), offset(4), arrow({ element: arrowRef })],
+
+    middleware: [shift(), offset(4)],
   });
 
   return (
@@ -97,7 +89,7 @@ export const Timeline = ({
             ></button>
             <div
               ref={floating}
-              className="bg-black text-xs font-mono p-1 text-white z-10 relative min-w-[100px] text-center"
+              className="bg-black text-xs font-mono p-1 text-white z-10 min-w-[100px] text-center"
               style={{
                 position: strategy,
                 opacity: sha === commit ? 1 : 0,
