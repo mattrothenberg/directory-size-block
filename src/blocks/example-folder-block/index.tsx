@@ -76,6 +76,12 @@ function BlockInner(props: FolderBlockProps) {
     [commits]
   );
 
+  let activeCommitIndex = commits?.findIndex((d) => d.sha === commit);
+
+  let beforeTree = activeCommitIndex
+    ? commits?.[activeCommitIndex - 1]?.tree
+    : undefined;
+
   return (
     <div className="p-4">
       <div className="Box">
@@ -85,7 +91,11 @@ function BlockInner(props: FolderBlockProps) {
           commits={commits || []}
         />
         {!!activeCommit?.tree && !!maxSize && (
-          <Bars tree={activeCommit?.tree} maxSize={maxSize} />
+          <Bars
+            beforeTree={beforeTree}
+            tree={activeCommit?.tree}
+            maxSize={maxSize}
+          />
         )}
       </div>
     </div>
