@@ -1,10 +1,29 @@
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from "@primer/octicons-react";
 import fileSize from "filesize";
-import { LayoutGroup, motion } from "framer-motion";
-import { useMemo } from "react";
+import { animate, LayoutGroup, motion } from "framer-motion";
+import { useEffect, useMemo, useRef } from "react";
 import { Tree } from ".";
 
 type Delta = "increase" | "decrease" | "same" | "new";
+
+function Counter({ from, to }: { from: number; to: number }) {
+  const nodeRef = useRef<HTMLParagraphElement>(null!);
+
+  useEffect(() => {
+    const node = nodeRef.current;
+
+    const controls = animate(from, to, {
+      duration: 0.35,
+      onUpdate(value) {
+        node.textContent = fileSize(value);
+      },
+    });
+
+    return () => controls.stop();
+  }, [from, to]);
+
+  return <p ref={nodeRef} />;
+}
 
 export const Bars = ({
   tree,
@@ -31,9 +50,9 @@ export const Bars = ({
       <div className="relative z-0 px-4 pb-4 space-y-1 mt-6">
         {sortedTree.map(({ path, sha, size }) => {
           const percent = ((size || 0) * 100) / maxSize;
+          let beforePath = beforeTree?.find((d) => d.path === path);
 
           const getDelta = (): Delta => {
-            let beforePath = beforeTree?.find((d) => d.path === path);
             if (!beforePath) return "new";
             if (!size) return "same";
             if (!beforePath.size) return "same";
@@ -55,7 +74,10 @@ export const Bars = ({
               key={path}
             >
               <div className="text-right text-gray-600">
-                <span className="font-mono text-xs">{fileSize(size || 0)}</span>
+                <span className="font-mono text-xs">
+                  {/* @ts-ignore */}
+                  <Counter from={beforePath?.size} to={size} />
+                </span>
               </div>
               <div className="text-center">
                 {beforeTree ? (
