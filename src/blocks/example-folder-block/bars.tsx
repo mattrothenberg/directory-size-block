@@ -22,7 +22,7 @@ function Counter({ from, to }: { from: number; to: number }) {
     return () => controls.stop();
   }, [from, to]);
 
-  return <p ref={nodeRef} />;
+  return <p className="text-right font-mono text-xs" ref={nodeRef} />;
 }
 
 export const Bars = ({
@@ -73,11 +73,9 @@ export const Bars = ({
               className="grid grid-cols-[100px_40px_240px_1fr] gap-2"
               key={path}
             >
-              <div className="text-right text-gray-600">
-                <span className="font-mono text-xs">
-                  {/* @ts-ignore */}
-                  <Counter from={beforePath?.size} to={size} />
-                </span>
+              <div className="flex items-center justify-end">
+                {/* @ts-ignore */}
+                <Counter from={beforePath?.size} to={size} />
               </div>
               <div className="text-center">
                 {beforeTree ? (
