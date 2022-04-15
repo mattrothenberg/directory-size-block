@@ -42,6 +42,7 @@
     "@octokit/rest": "^18.12.0",
     "@primer/octicons-react": "^17.0.0",
     "@types/lodash.uniqueid": "^4.0.6",
+    "filesize": "^8.0.7",
     "framer-motion": "^6.3.0",
     "git-url-parse": "^11.6.0",
     "lodash.uniqueid": "^4.0.1",

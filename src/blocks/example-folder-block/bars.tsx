@@ -1,11 +1,8 @@
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from "@primer/octicons-react";
 import { motion, LayoutGroup } from "framer-motion";
 import { useMemo } from "react";
+import fileSize from "filesize";
 import { Tree } from ".";
-
-const formatSize = (size?: number) => {
-  return ((size || 0) / 1000).toFixed(1).toLocaleString() + "kb";
-};
 
 export const Bars = ({
   tree,
@@ -24,7 +21,7 @@ export const Bars = ({
   return (
     <LayoutGroup>
       <div className="relative z-0 px-4 pb-4 space-y-1 mt-6">
-        {sortedTree.map(({ path, size }) => {
+        {sortedTree.map(({ path, size, sha }) => {
           const percent = ((size || 0) * 100) / maxSize;
           const beforeSize = beforeTree?.find((d) => d.path === path)?.size;
           const increased =
@@ -34,6 +31,8 @@ export const Bars = ({
             typeof size !== "undefined" &&
             Boolean(beforeSize && beforeSize > size);
 
+          const pathUrl = ``;
+
           return (
             <motion.div
               layout="position"
@@ -42,7 +41,7 @@ export const Bars = ({
               key={path}
             >
               <div className="text-right text-gray-600">
-                <span className="font-mono text-xs">{formatSize(size)}</span>
+                <span className="font-mono text-xs">{fileSize(size || 0)}</span>
               </div>
               <div className="text-center">
                 <span>
@@ -51,7 +50,9 @@ export const Bars = ({
                 </span>
               </div>
               <div className="truncate text-gray-600">
-                <span className="font-mono text-xs">{path}</span>
+                <a href={pathUrl}>
+                  <span className="font-mono text-xs">{path}</span>
+                </a>
               </div>
               <div>
                 <motion.div
@@ -65,27 +66,6 @@ export const Bars = ({
                   }}
                 ></motion.div>
               </div>
-              {/* <motion.div className="flex-none truncate font-mono text-xs text-right text-gray-500">
-                {formatSize(size)}
-              </motion.div>
-              <motion.div className="w-4 flex-shrink-0">
-                {increased && <ArrowUpRightIcon className="text-green-600" />}
-                {decreased && <ArrowDownLeftIcon className="text-red-600" />}
-              </motion.div>
-              <motion.div className="flex-none truncate font-mono text-xs mr-2">
-                {path}
-              </motion.div>
-              <motion.div className="flex-1 relative min-w-0">
-                <motion.div
-                  className="bg-indigo-600 h-4 relative"
-                  initial={{
-                    width: 0,
-                  }}
-                  animate={{
-                    width: `${percent}%`,
-                  }}
-                ></motion.div>
-              </motion.div> */}
             </motion.div>
           );
         })}
