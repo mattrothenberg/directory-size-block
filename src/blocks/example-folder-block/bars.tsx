@@ -4,6 +4,8 @@ import { useMemo } from "react";
 import fileSize from "filesize";
 import { Tree } from ".";
 
+type Delta = "increase" | "decrease" | "same" | "new";
+
 export const Bars = ({
   tree,
   maxSize,
@@ -21,33 +23,50 @@ export const Bars = ({
   return (
     <LayoutGroup>
       <div className="relative z-0 px-4 pb-4 space-y-1 mt-6">
-        {sortedTree.map(({ path, size, sha }) => {
+        {sortedTree.map(({ path, size }) => {
           const percent = ((size || 0) * 100) / maxSize;
-          const beforeSize = beforeTree?.find((d) => d.path === path)?.size;
-          const increased =
-            typeof size !== "undefined" &&
-            Boolean(beforeSize && beforeSize < size);
-          const decreased =
-            typeof size !== "undefined" &&
-            Boolean(beforeSize && beforeSize > size);
 
-          const pathUrl = ``;
+          const getDelta = (): Delta => {
+            let beforePath = beforeTree?.find((d) => d.path === path);
+            if (!beforePath) return "new";
+            if (!size) return "same";
+            if (!beforePath.size) return "same";
+            return beforePath?.size === size
+              ? "same"
+              : size > beforePath.size
+              ? "increase"
+              : "decrease";
+          };
+
+          const pathUrl = `https://google.com`;
+          let delta = getDelta();
 
           return (
             <motion.div
               layout="position"
               layoutId={path}
-              className="grid grid-cols-[100px_30px_240px_1fr] gap-2"
+              className="grid grid-cols-[100px_40px_240px_1fr] gap-2"
               key={path}
             >
               <div className="text-right text-gray-600">
                 <span className="font-mono text-xs">{fileSize(size || 0)}</span>
               </div>
               <div className="text-center">
-                <span>
-                  {increased && <ArrowUpRightIcon className="text-green-600" />}
-                  {decreased && <ArrowDownLeftIcon className="text-red-600" />}
-                </span>
+                {beforeTree ? (
+                  <span>
+                    {delta === "increase" && (
+                      <ArrowUpRightIcon className="text-green-600" />
+                    )}
+                    {delta === "new" && (
+                      <span className="Label Label--accent transform scale-90">
+                        New
+                      </span>
+                    )}
+                    {delta === "decrease" && (
+                      <ArrowDownLeftIcon className="text-red-600" />
+                    )}
+                  </span>
+                ) : null}
               </div>
               <div className="truncate text-gray-600">
                 <a href={pathUrl}>

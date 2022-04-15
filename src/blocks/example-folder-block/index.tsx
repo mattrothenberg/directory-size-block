@@ -78,9 +78,11 @@ function BlockInner(props: FolderBlockProps) {
 
   let activeCommitIndex = commits?.findIndex((d) => d.sha === commit);
 
-  let beforeTree = activeCommitIndex
-    ? commits?.[activeCommitIndex - 1]?.tree
-    : undefined;
+  let beforeTree = useMemo(
+    () =>
+      activeCommitIndex ? commits?.[activeCommitIndex - 1]?.tree : undefined,
+    [activeCommitIndex, commits]
+  );
 
   return (
     <div className="p-4">
