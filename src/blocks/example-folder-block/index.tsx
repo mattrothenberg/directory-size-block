@@ -87,16 +87,21 @@ function BlockInner(props: FolderBlockProps) {
   return (
     <div className="p-4">
       <div className="Box">
-        <Timeline
-          commit={commit}
-          setCommit={setCommit}
-          commits={commits || []}
-        />
+        {commits && commits?.length > 0 && (
+          <Timeline
+            commit={commit}
+            setCommit={setCommit}
+            commits={commits || []}
+          />
+        )}
         {!!activeCommit?.tree && !!maxSize && (
           <Bars
             beforeTree={beforeTree}
+            repo={context.repo}
+            owner={context.owner}
             tree={activeCommit?.tree}
             maxSize={maxSize}
+            commit={commit}
           />
         )}
       </div>

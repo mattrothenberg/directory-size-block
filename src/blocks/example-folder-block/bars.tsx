@@ -1,7 +1,7 @@
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from "@primer/octicons-react";
-import { motion, LayoutGroup } from "framer-motion";
-import { useMemo } from "react";
 import fileSize from "filesize";
+import { LayoutGroup, motion } from "framer-motion";
+import { useMemo } from "react";
 import { Tree } from ".";
 
 type Delta = "increase" | "decrease" | "same" | "new";
@@ -10,10 +10,16 @@ export const Bars = ({
   tree,
   maxSize,
   beforeTree,
+  owner,
+  repo,
+  commit,
 }: {
   tree: Tree;
   beforeTree?: Tree;
   maxSize: number;
+  owner: string;
+  repo: string;
+  commit: string | null;
 }) => {
   const sortedTree = useMemo(
     () => tree.sort((a, b) => (b?.size || 0) - (a?.size || 0)),
@@ -23,7 +29,7 @@ export const Bars = ({
   return (
     <LayoutGroup>
       <div className="relative z-0 px-4 pb-4 space-y-1 mt-6">
-        {sortedTree.map(({ path, size }) => {
+        {sortedTree.map(({ path, sha, size }) => {
           const percent = ((size || 0) * 100) / maxSize;
 
           const getDelta = (): Delta => {
@@ -38,7 +44,7 @@ export const Bars = ({
               : "decrease";
           };
 
-          const pathUrl = `https://google.com`;
+          const pathUrl = `https://github.com/${owner}/${repo}/commit/${commit}`;
           let delta = getDelta();
 
           return (
@@ -69,7 +75,7 @@ export const Bars = ({
                 ) : null}
               </div>
               <div className="truncate text-gray-600">
-                <a href={pathUrl}>
+                <a className="hover:underline" target="_blank" href={pathUrl}>
                   <span className="font-mono text-xs">{path}</span>
                 </a>
               </div>

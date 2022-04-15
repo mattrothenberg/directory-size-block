@@ -1,5 +1,5 @@
-import { offset, shift, useFloating } from "@floating-ui/react-dom";
 import { useState } from "react";
+import { Range } from "react-range";
 import { CommitWithData } from ".";
 import { useInterval } from "./hooks";
 
@@ -25,16 +25,11 @@ export const Timeline = ({
     isPlaying ? 500 : null
   );
 
-  const { x, y, reference, floating, strategy } = useFloating({
-    placement: "bottom",
-
-    middleware: [shift(), offset(4)],
-  });
+  let values = [commits.findIndex((d) => d.sha === commit)];
 
   return (
-    <div className="w-full p-3 border-b px-3 flex items-center">
+    <div className="w-full p-3 border-b flex items-center gap-3">
       <button
-        className="mr-1"
         onClick={() => {
           if (commitIndex === commits.length - 1) {
             setCommit(commits[0].sha);
@@ -69,41 +64,58 @@ export const Timeline = ({
           </svg>
         )}
       </button>
-      <ul
-        className="flex items-center justify-between space-x-2 relative flex-1"
-        style={{
-          maxWidth: commits.length * 2 + "em",
-        }}
-      >
-        <div className="absolute top-1/2 left-2 right-1 border-b-2 border-black transform -translate-y-[2px]"></div>
-        {commits.map(({ sha, message, date }, index) => (
-          <li ref={reference} className="relative" key={sha}>
-            <button
-              className={`truncate w-4 h-4 border-2 border-black hover:bg-gray-500 rounded-full ${
-                sha === commit ? "bg-black hover:bg-black" : "bg-white"
-              }`}
-              onClick={() => {
-                setCommit(sha);
-                setIsPlaying(false);
-              }}
-            ></button>
+      <div className="flex-1 flex items-center">
+        <Range
+          step={1}
+          min={0}
+          max={commits.length - 1}
+          values={values}
+          onChange={(values) => {
+            if (isPlaying) {
+              setIsPlaying(false);
+            }
+
+            setCommit(commits[values[0]].sha);
+          }}
+          renderMark={({ props, index }) => (
             <div
-              ref={floating}
-              className="bg-black text-xs font-mono p-1 text-white z-10 min-w-[100px] text-center"
+              {...props}
+              className="w-[2px] h-3"
               style={{
-                position: strategy,
-                opacity: sha === commit ? 1 : 0,
-                pointerEvents: sha === commit ? "all" : "none",
-                top: y ?? "",
-                left: x ?? "",
+                ...props.style,
+                backgroundColor: index * 1 < values[0] ? "black" : "#ccc",
+              }}
+            />
+          )}
+          renderTrack={({ props, children }) => (
+            <div
+              {...props}
+              className="bg-gray-200 h-1 w-full"
+              style={{
+                ...props.style,
               }}
             >
-              {sha.slice(0, 7)}
-              <div>{date || ""}</div>
+              {children}
             </div>
-          </li>
-        ))}
-      </ul>
+          )}
+          renderThumb={({ props }) => (
+            <div
+              {...props}
+              className="w-4 h-4 rounded-full bg-black flex items-center justify-center relative"
+              style={{
+                ...props.style,
+              }}
+            >
+              <div className="absolute -top-3 w-2 h-2 bg-black transform rotate-45"></div>
+              <div className="bg-black absolute -top-8 text-white p-1 text-xs">
+                <span className="font-mono">
+                  {commits[values[0]].sha.slice(0, 7)}
+                </span>
+              </div>
+            </div>
+          )}
+        />
+      </div>
     </div>
   );
 };
