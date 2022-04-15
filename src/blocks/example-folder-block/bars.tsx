@@ -95,7 +95,11 @@ export const Bars = ({
                 ) : null}
               </div>
               <div className="truncate text-gray-600">
-                <a className="hover:underline" target="_blank" href={pathUrl}>
+                <a
+                  className="hover:underline !text-gray-600"
+                  target="_blank"
+                  href={pathUrl}
+                >
                   <span className="font-mono text-xs">{path}</span>
                 </a>
               </div>
