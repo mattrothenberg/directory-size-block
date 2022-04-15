@@ -18,7 +18,7 @@ export const Timeline = ({
   useInterval(
     () => {
       const nextCommitIndex = commitIndex + 1;
-      if (nextCommitIndex >= commits.length) setIsPlaying(false);
+      if (nextCommitIndex >= commits.length - 1) setIsPlaying(false);
       const nextCommit = commits[nextCommitIndex];
       setCommit(nextCommit.sha);
     },
@@ -74,7 +74,6 @@ export const Timeline = ({
             if (isPlaying) {
               setIsPlaying(false);
             }
-
             setCommit(commits[values[0]].sha);
           }}
           renderMark={({ props, index }) => (
@@ -109,7 +108,7 @@ export const Timeline = ({
               <div className="absolute -top-3 w-2 h-2 bg-black transform rotate-45"></div>
               <div className="bg-black absolute -top-8 text-white p-1 text-xs">
                 <span className="font-mono">
-                  {commits[values[0]].sha.slice(0, 7)}
+                  {commits?.[values[0]]?.sha.slice(0, 7)}
                 </span>
               </div>
             </div>

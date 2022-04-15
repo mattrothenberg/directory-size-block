@@ -1,6 +1,6 @@
 import { FolderBlockProps } from "@githubnext/utils";
 import { Endpoints } from "@octokit/types";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Bars } from "./bars";
 import { Timeline } from "./timeline";
@@ -25,6 +25,10 @@ function BlockInner(props: FolderBlockProps) {
   const { owner, repo } = context;
   const [commit, setCommit] = useState<string | null>(null);
 
+  useEffect(() => {
+    setCommit(null);
+  }, [context.path]);
+
   const fetchAllTheThings = async () => {
     const commits: Commits = (
       await onRequestGitHubData(`/repos/${owner}/${repo}/commits`, {
@@ -41,25 +45,29 @@ function BlockInner(props: FolderBlockProps) {
         const date = commit.commit.committer?.date;
         const dateObject = date ? new Date(date) : undefined;
         const formattedDate = dateObject?.toLocaleString();
+
         return {
           sha: commit.sha,
           message: commit.commit.message,
           date: formattedDate,
-          tree: tree.tree.filter((d: Tree[0]) => d.type !== "tree"),
+          tree: tree.tree.filter(
+            (d: Tree[0]) => d.type !== "tree" && d?.path?.includes(context.path)
+          ),
         };
       })
     );
   };
 
-  const { data: commits } = useQuery<CommitWithData[]>(
-    "commits",
+  const { data: commits, status } = useQuery<CommitWithData[]>(
+    ["commits", context.path],
     fetchAllTheThings,
     {
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess: (data) => {
-        if (commit) return;
-        setCommit(data[0].sha);
+        if (data.length > 0) {
+          setCommit(data[0].sha);
+        }
       },
     }
   );
@@ -87,25 +95,46 @@ function BlockInner(props: FolderBlockProps) {
 
   return (
     <div className="p-4">
-      <div className="Box">
-        {commits && commits?.length > 0 && (
-          <Timeline
-            commit={commit}
-            setCommit={setCommit}
-            commits={commits || []}
-          />
-        )}
-        {!!activeCommit?.tree && !!maxSize && (
-          <Bars
-            beforeTree={beforeTree}
-            repo={context.repo}
-            owner={context.owner}
-            tree={activeCommit?.tree}
-            maxSize={maxSize}
-            commit={commit}
-          />
-        )}
-      </div>
+      {status === "loading" && (
+        <p className="text-sm text-gray-600">Loading...</p>
+      )}
+
+      {status === "error" && (
+        <p className="text-sm text-red-600">An error occurred...</p>
+      )}
+
+      {status === "success" && (
+        <>
+          {commits.length === 0 && (
+            <div>
+              No commits found for path{" "}
+              <span className="font-mono">{context.path}</span>
+            </div>
+          )}
+          {commits.length > 0 && commit && (
+            <div className="Box">
+              {/* No sense in showing the timeline unless we have multiple commits */}
+              {commits.length > 1 && (
+                <Timeline
+                  commit={commit}
+                  setCommit={setCommit}
+                  commits={commits}
+                />
+              )}
+              {commit && !!activeCommit?.tree && !!maxSize && (
+                <Bars
+                  beforeTree={beforeTree}
+                  repo={context.repo}
+                  owner={context.owner}
+                  tree={activeCommit?.tree}
+                  maxSize={maxSize}
+                  commit={commit}
+                />
+              )}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
