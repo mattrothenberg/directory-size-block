@@ -29,6 +29,7 @@ function BlockInner(props: FolderBlockProps) {
     const commits: Commits = (
       await onRequestGitHubData(`/repos/${owner}/${repo}/commits`, {
         path: context.path,
+        sha: context.sha,
       })
     ).reverse();
 
