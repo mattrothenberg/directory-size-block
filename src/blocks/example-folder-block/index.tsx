@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { Bars } from "./bars";
 import { Timeline } from "./timeline";
+import { tw } from "twind";
 
 export type Commits =
   Endpoints["GET /repos/{owner}/{repo}/commits"]["response"]["data"];
@@ -21,6 +22,7 @@ export const getMax = (arr: number[]) =>
   arr.reduce((agg, val) => Math.max(agg, val), 0);
 
 function BlockInner(props: FolderBlockProps) {
+  console.log(props);
   const { onRequestGitHubData, context } = props;
   const { owner, repo } = context;
   const [commit, setCommit] = useState<string | null>(null);
@@ -94,13 +96,13 @@ function BlockInner(props: FolderBlockProps) {
   );
 
   return (
-    <div className="p-4">
+    <div className={tw(`p-4`)}>
       {status === "loading" && (
-        <p className="text-sm text-gray-600">Loading...</p>
+        <p className={tw`text-sm text-gray-600`}>Loading...</p>
       )}
 
       {status === "error" && (
-        <p className="text-sm text-red-600">An error occurred...</p>
+        <p className={tw`text-sm text-red-600`}>An error occurred...</p>
       )}
 
       {status === "success" && (
@@ -108,11 +110,11 @@ function BlockInner(props: FolderBlockProps) {
           {commits.length === 0 && (
             <div>
               No commits found for path{" "}
-              <span className="font-mono">{context.path}</span>
+              <span className={tw`font-mono`}>{context.path}</span>
             </div>
           )}
           {commits.length > 0 && commit && (
-            <div className="Box">
+            <div className={tw`border border-gray-300`}>
               {/* No sense in showing the timeline unless we have multiple commits */}
               {commits.length > 1 && (
                 <Timeline

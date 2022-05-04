@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Range } from "react-range";
 import { CommitWithData } from ".";
+import { tw } from "twind";
 import { useInterval } from "./hooks";
 
 export const Timeline = ({
@@ -28,7 +29,7 @@ export const Timeline = ({
   let values = [commits.findIndex((d) => d.sha === commit)];
 
   return (
-    <div className="w-full p-3 border-b flex items-center gap-3">
+    <div className={tw`w-full p-3 border-b flex items-center gap-3`}>
       <button
         onClick={() => {
           if (commitIndex === commits.length - 1) {
@@ -64,7 +65,7 @@ export const Timeline = ({
           </svg>
         )}
       </button>
-      <div className="flex-1 flex items-center">
+      <div className={tw`flex-1 flex items-center`}>
         <Range
           step={1}
           min={0}
@@ -79,7 +80,7 @@ export const Timeline = ({
           renderMark={({ props, index }) => (
             <div
               {...props}
-              className="w-[2px] h-3"
+              className={tw`w-[2px] h-3`}
               style={{
                 ...props.style,
                 backgroundColor: index * 1 < values[0] ? "black" : "#ccc",
@@ -89,7 +90,7 @@ export const Timeline = ({
           renderTrack={({ props, children }) => (
             <div
               {...props}
-              className="bg-gray-200 h-1 w-full"
+              className={tw`bg-gray-200 h-1 w-full`}
               style={{
                 ...props.style,
               }}
@@ -100,14 +101,18 @@ export const Timeline = ({
           renderThumb={({ props }) => (
             <div
               {...props}
-              className="w-4 h-4 rounded-full bg-black flex items-center justify-center relative"
+              className={tw`w-4 h-4 rounded-full bg-black flex items-center justify-center relative`}
               style={{
                 ...props.style,
               }}
             >
-              <div className="absolute -top-3 w-2 h-2 bg-black transform rotate-45"></div>
-              <div className="bg-black absolute -top-8 text-white p-1 text-xs">
-                <span className="font-mono">
+              <div
+                className={tw`absolute -top-3 w-2 h-2 bg-black transform rotate-45`}
+              ></div>
+              <div
+                className={tw`bg-black absolute -top-8 text-white p-1 text-xs`}
+              >
+                <span className={tw`font-mono`}>
                   {commits?.[values[0]]?.sha.slice(0, 7)}
                 </span>
               </div>

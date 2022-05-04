@@ -1,7 +1,9 @@
 import { ArrowDownLeftIcon, ArrowUpRightIcon } from "@primer/octicons-react";
+import { Label } from "@primer/react";
 import fileSize from "filesize";
 import { animate, LayoutGroup, motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
+import { tw } from "twind";
 import { Tree } from ".";
 
 type Delta = "increase" | "decrease" | "same" | "new";
@@ -22,7 +24,7 @@ function Counter({ from, to }: { from: number; to: number }) {
     return () => controls.stop();
   }, [from, to]);
 
-  return <p className="text-right font-mono text-xs" ref={nodeRef} />;
+  return <p className={tw`text-right font-mono text-xs`} ref={nodeRef} />;
 }
 
 export const Bars = ({
@@ -47,7 +49,7 @@ export const Bars = ({
 
   return (
     <LayoutGroup>
-      <div className="relative z-0 px-4 pb-4 space-y-1 mt-6">
+      <div className={tw`relative z-0 px-4 pb-4 space-y-1 mt-6`}>
         {sortedTree.map(({ path, sha, size }) => {
           const percent = ((size || 0) * 100) / maxSize;
           let beforePath = beforeTree?.find((d) => d.path === path);
@@ -70,43 +72,46 @@ export const Bars = ({
             <motion.div
               layout="position"
               layoutId={path}
-              className="grid grid-cols-[100px_40px_240px_1fr] gap-2"
+              className={tw`grid grid-cols-[100px_40px_240px_1fr] gap-2`}
               key={path}
             >
-              <div className="flex items-center justify-end">
+              <div className={tw`flex items-center justify-end`}>
                 {/* @ts-ignore */}
                 <Counter from={beforePath?.size} to={size} />
               </div>
-              <div className="text-center">
+              <div className={tw`text-center`}>
                 {beforeTree ? (
                   <span>
                     {delta === "increase" && (
-                      <ArrowUpRightIcon className="text-green-600" />
+                      <ArrowUpRightIcon className={tw`text-green-600`} />
                     )}
                     {delta === "new" && (
-                      <span className="Label Label--accent transform scale-90">
+                      <Label
+                        className={tw`transform scale-90`}
+                        variant="accent"
+                      >
                         New
-                      </span>
+                      </Label>
                     )}
                     {delta === "decrease" && (
-                      <ArrowDownLeftIcon className="text-red-600" />
+                      <ArrowDownLeftIcon className={tw`text-red-600`} />
                     )}
                   </span>
                 ) : null}
               </div>
-              <div className="truncate text-gray-600">
+              <div className={tw`truncate text-gray-600`}>
                 <a
-                  className="hover:underline !text-gray-600"
+                  className={tw`hover:underline !text-gray-600`}
                   target="_blank"
                   href={pathUrl}
                 >
-                  <span className="font-mono text-xs">{path}</span>
+                  <span className={tw`font-mono text-xs`}>{path}</span>
                 </a>
               </div>
               <div>
                 <motion.div
                   layout="position"
-                  className="bg-indigo-600 h-4 relative"
+                  className={tw`bg-indigo-600 h-4 relative`}
                   initial={{
                     width: 0,
                   }}

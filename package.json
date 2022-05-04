@@ -35,11 +35,12 @@
     }
   ],
   "dependencies": {
-    "@codesandbox/sandpack-react": "^0.13.13",
-    "@githubnext/utils": "^0.19.8",
+    "@codesandbox/sandpack-react": "^0.19.6",
+    "@githubnext/utils": "^0.22.0",
     "@loadable/component": "^5.15.0",
     "@octokit/rest": "^18.12.0",
     "@primer/octicons-react": "^17.0.0",
+    "@primer/react": "^35.2.1",
     "@types/lodash.uniqueid": "^4.0.6",
     "filesize": "^8.0.7",
     "framer-motion": "^6.3.0",
@@ -50,7 +51,9 @@
     "react-dom": "^17.0.0",
     "react-error-boundary": "^3.1.4",
     "react-query": "^3.32.3",
-    "react-range": "^1.8.12"
+    "react-range": "^1.8.12",
+    "styled-components": "^5.3.5",
+    "twind": "^0.16.17"
   },
   "devDependencies": {
     "@types/git-url-parse": "^9.0.1",
