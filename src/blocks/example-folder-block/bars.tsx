@@ -72,7 +72,10 @@ export const Bars = ({
             <motion.div
               layout="position"
               layoutId={path}
-              className={tw`grid grid-cols-[100px_40px_240px_1fr] gap-2`}
+              className={tw`grid gap-2`}
+              style={{
+                gridTemplateColumns: "100px 40px 240px 1fr",
+              }}
               key={path}
             >
               <div className={tw`flex items-center justify-end`}>
